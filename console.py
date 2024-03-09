@@ -81,6 +81,40 @@ class HBNBCommand(cmd.Cmd):
                     print(f"[{obj}]")
         else:
             pass
+    
+    def do_destroy(self, ids):
+        """ Deletes an obj/instance based on its id"""
+        p = re.compile(r'^[\da-fA-F]{8}(-[\da-fA-F]{4}){3}-[\da-fA-F]{12}$')
+        pattern1 = re.compile(r'^[A-za-z]+$')
+        if ids != "":
+            args = ids.split()
+            if (args and len(args) == 1):
+                idMatch = re.match(p, args[0])
+                clMatch = re.match(pattern1, args[0])
+                if idMatch:
+                    print("** class name is missing **")
+                elif (clMatch and args[0] != "BaseModel"):
+                    print("** class doesn't exist **")
+                elif (clMatch and args[0] == "BaseModel"):
+                    print("** instance id missing **")
+            elif (args and len(args) == 2):
+                klas, id = args
+                if os.path.exists("file.json"):
+                    with open("file.json", "r") as f:
+                        json_str = json.load(f)
+                        if id in json_str:
+                            del json_str[id]
+                        if id not in json_str:
+                            print("** no instance found **")
+                    """with open("file.json", 'w') as file:
+                        json.dump(json_str, file, indent=4)"""
+                else:
+                    pass
+            elif (args and len(args) > 2):
+                print("Invalid input. Usage: show  <class> <id>")
+        else:
+            print("** class name is missing **")
+
 
     def do_quit(self, line):
         """ Quit AirBnB terminal by typing 'quit' """
