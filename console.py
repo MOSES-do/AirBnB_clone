@@ -34,29 +34,26 @@ class HBNBCommand(cmd.Cmd):
                 clMatch = re.match(pattern1, args[0])
                 if idMatch:
                     print("** class name is missing **")
-                elif clMatch and args[0] != "BaseModel":
+                elif (clMatch and args[0] != "BaseModel"):
                     print("** class doesn't exist **")
-                elif clMatch and args[0] == "BaseModel":
+                elif (clMatch and args[0] == "BaseModel"):
                     print("** instance id missing **")
-                elif (args and len(args) == 2):
-                    klas, id = args
-                    """print(id)"""
-                    if os.path.exists("file.json"):
-                        with open("file.json", "r") as f:
-                            json_str = json.load(f)
-                            """print(json_str)"""
-                            for key, value in json_str.items():
-                                id_value = value.get('id')
-                                if id_value == id:
-                                    obj = BaseModel(**value)
-                                    print(f"{obj}")
-                                else:
-                                    """comparism doesn't work yet
-                                    print("** no instance found **")
-                                    print(id, id_value)"""
-                                    pass
-                    else:
-                        pass
+            elif (args and len(args) == 2):
+                klas, id = args
+                if os.path.exists("file.json"):
+                    with open("file.json", "r") as f:
+                        json_str = json.load(f)
+                        """print(json_str)"""
+                        for key, value in json_str.items():
+                            id_value = value.get('id')
+                            """print(id)"""
+                            if id_value == id:
+                                obj = BaseModel(**value)
+                                print(f"{obj}")
+                        if id != id_value:
+                            print("** no instance found **")
+                else:
+                    pass
             elif (args and len(args) > 2):
                 print("Invalid input. Usage: show  <class> <id>")
         else:
