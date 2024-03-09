@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import models.engine.file_storage as f
+import models.base_model as b
+
+obj = f.FileStorage()
+base = b.BaseModel()
+
+obj.reload()
+
+obj.new(base)
+obj.save()
+
+print(obj.all())
