@@ -81,7 +81,7 @@ class HBNBCommand(cmd.Cmd):
                     print(f"[{obj}]")
         else:
             pass
-    
+
     def do_destroy(self, ids):
         """ Deletes an obj/instance based on its id"""
         p = re.compile(r'^[\da-fA-F]{8}(-[\da-fA-F]{4}){3}-[\da-fA-F]{12}$')
@@ -114,7 +114,6 @@ class HBNBCommand(cmd.Cmd):
                 print("Invalid input. Usage: show  <class> <id>")
         else:
             print("** class name is missing **")
-
 
     def do_quit(self, line):
         """ Quit AirBnB terminal by typing 'quit' """
