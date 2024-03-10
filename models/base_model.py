@@ -24,7 +24,9 @@ class BaseModel:
             kwargs["updated_at"] = datetime.now()
 
             for key, value in kwargs.items():
-                if key != "__class__":
+                if key == "__class__":
+                    continue
+                else:
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
