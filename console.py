@@ -21,6 +21,23 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     file_path = "file.json"
 
+    def precmd(self, line):
+        re1 = r'^[A-za-z]+\.[A-za-z]+\([a-fA-F0-9-]+\)$'
+        re2 = r'^[a-zA-Z]+\.[a-zA-Z]+\(.*\)$'
+        lineMatch = re.match(re1, line)
+        lineMatch1 = re.match(re2, line)
+
+        if lineMatch:
+            c = line.replace(".", " ").replace("(", " ").replace(")", "")
+            command = c.split(" ")
+            line = f"{command[1]} {command[0]} {command[2]}"
+        elif lineMatch1:
+            c = line.replace(".", " ").replace("(", "").replace(")", "")
+            command = c.split(" ")
+            line = f"{command[1]} {command[0]}"
+
+        return cmd.Cmd.precmd(self, line)
+
     def checkGlobalClass(self, cls):
         """ method checks existence of classes globally """
         pattern1 = re.compile(r'^[A-za-z]+$')
