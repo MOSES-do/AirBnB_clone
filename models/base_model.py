@@ -10,23 +10,13 @@ class BaseModel:
     """ BaseModel """
 
     def __init__(self, *args, **kwargs):
-        """
-            constructor docstring
-            If BaseModel is not called with an object argument the
-            "else" part of the code is executed.
-            code below uses parameter '**kwargs' which is a "dictionary"
-            but creates its own created_at and updated_at by overriding
-            the one present in '**kwargs' dictionary
-        """
-
-        if kwargs and len(kwargs) > 0:
-            kwargs["created_at"] = datetime.now()
-            kwargs["updated_at"] = datetime.now()
-
+        if kwargs:
             for key, value in kwargs.items():
                 if key == "__class__":
                     continue
                 else:
+                    if key == 'created_at' or key == 'updated_at':
+                        value = datetime.fromisoformat(value)
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())

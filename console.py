@@ -14,6 +14,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -22,12 +23,15 @@ class HBNBCommand(cmd.Cmd):
     file_path = "file.json"
 
     def precmd(self, line):
+        """modify cmd argument patterns"""
         re1 = r'^[A-za-z]+\.[A-za-z]+\([a-fA-F0-9-]+\)$'
         re2 = r'^[a-zA-Z]+\.[a-zA-Z]+\(.*\)$'
+        re3 = r'[a-zA-Z]+\.[a-zA-Z]+\("([^"]+)"\)'
         lineMatch = re.match(re1, line)
         lineMatch1 = re.match(re2, line)
+        lineMatch2 = re.match(re3, line)
 
-        if lineMatch:
+        if lineMatch or lineMatch2:
             c = line.replace(".", " ").replace("(", " ").replace(")", "")
             command = c.split(" ")
             line = f"{command[1]} {command[0]} {command[2]}"
@@ -59,47 +63,30 @@ class HBNBCommand(cmd.Cmd):
 
         try:
             model_cls = globals()[line]
+            cls_model = self.checkGlobalClass(line)
+            new_instance_cls = eval(f'{cls_model}()')
+            new_instance = new_instance_cls
+            new_instance.save()
+            print(new_instance.id)
         except KeyError:
             print("** class doesn't exist **")
             return
 
-        new_instance = model_cls()
-        new_id = str(uuid.uuid4())
-        setattr(new_instance, "id", new_id)
-
-        self.save(new_instance)
-        print(new_id)
-
-    def save(self, arg):
-        """save instance object to a JSON file"""
-
-        if os.path.isfile(HBNBCommand.file_path):
-            with open(HBNBCommand.file_path, 'r') as file:
-                data = json.load(file)
-        else:
-            data = {}
-
-        instance_dict = arg.to_dict()
-        value = instance_dict["id"]
-        data[arg.__class__.__name__ + "." + value] = instance_dict
-
-        keyValueFormat = instance_dict
-
-        with open(HBNBCommand.file_path, 'w') as file:
-            json.dump(data, file, indent=4)
-
-    def call_show(self, id):
+    def call_show(self, id, cls):
         """ method calls 'show' """
         if os.path.exists(HBNBCommand.file_path):
             with open(HBNBCommand.file_path, "r") as f:
                 json_str = json.load(f)
                 id_val = ""
+
                 for key, value in json_str.items():
                     id_value = value.get('id')
-                    if id == id_value:
+                    id_cls = value.get('__class__')
+                    if id == id_value and cls == id_cls:
                         id_val = id_value
-                        obj = BaseModel(**value)
-                        print(obj)
+                        cls = globals()[id_cls]
+                        py = cls(**value)
+                        print(py)
                 if (id != id_val):
                     print("** no instance found **")
         else:
@@ -123,64 +110,47 @@ class HBNBCommand(cmd.Cmd):
             elif (args and len(args) == 2):
                 klas, id = args
                 if class_name == klas:
-                    self.call_show(id)
+                    self.call_show(id, klas)
             elif (args and len(args) > 2):
                 print("Invalid input. Usage: show  <class> <id>")
         else:
             print("** class name is missing **")
 
-    def time_convert(self, obj):
-        """convert format for timestamps """
-        for key, value in obj.items():
-            if key.endswith("_at"):
-                date_part, time_part = value.split("T")
-                y, mth, d = map(int, date_part.split("-"))
-                time_parts = time_part.split(":")
-                h, m = map(int, time_part[:2])
-                second, microsecond = map(int, time_parts[2].split("."))
-                dt = datetime(y, mth, d, h, m, second, microsecond)
-                fm_dt = (
-                    f"datetime.datetime({dt.year}, {dt.month}, {dt.day}, "
-                    f"{dt.hour}, {dt.minute}, {dt.second}, {dt.microsecond})"
-                )
-                obj[key] = fm_dt
-                return obj
+    def do_count(self, line):
+        if line != "":
+            class_name = self.checkGlobalClass(line)
+            with open(HBNBCommand.file_path, "r") as f:
+                json_str = json.load(f)
+                count = 0
+                for key, value in json_str.items():
+                    cls_name = value.get('__class__')
+                    if cls_name == line:
+                        count += 1
+                print(count)
+        else:
+            print("** class name is missing **")
 
     def do_all(self, line):
         """ print all instances of BaseModel """
         if os.path.exists(HBNBCommand.file_path):
             with open(HBNBCommand.file_path, "r") as f:
                 json_str = json.load(f)
-            strs = []
             if (line != ""):
                 args = line.split()
                 class_name = self.checkGlobalClass(args[0])
                 for key, value in json_str.items():
                     id_value = value.get('__class__')
                     if id_value == args[0]:
-                        obj1 = value
-                        """fn()call to convert "time" to suit req..."""
-                        time_c = self.time_convert(obj1)
-                        m__name = f"[{obj1['__class__']}]"
-                        m__id = "(" + value["id"] + ")"
-                        m__attr = str(value)
-                        m__instance = f"{m__name} {m__id} {m__attr}"
-                        strs.append(m__instance)
+                        cls = globals()[id_value]
+                        result = cls(**value)
                 if (class_name == args[0]):
-                    result = "[" + ", ".join(strs) + "]"
                     print(result)
-
             elif (line == ""):
                 for key, value in json_str.items():
-                    obj1 = value
-                    time_c = self.time_convert(obj1)
-                    model_name = f"[{obj1['__class__']}]"
-                    model_id = "(" + value["id"] + ")"
-                    model_attr = str(value)
-                    model_instance = f"{model_name} {model_id} {model_attr}"
-                    strs.append(model_instance)
-                result = "[" + ", ".join(strs) + "]"
-                print(result)
+                    id_value = value.get('__class__')
+                    cls = globals()[id_value]
+                    result = cls(**value)
+                    print(result)
         else:
             pass
 
@@ -232,57 +202,60 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name is missing **")
 
-    def do_update(self, ids):
-        """ Updates an obj/instance based on its id"""
-        p = re.compile(r'^[\da-fA-F]{8}(-[\da-fA-F]{4}){3}-[\da-fA-F]{12}$')
-        attr_v = re.compile(r'^[A-za-z0-9._+*%]+@[A-za-z]+\.[A-za-z]{2,}$')
-        attr_n = re.compile(r'^[a-z]+$')
-        pattern1 = re.compile(r'^[A-za-z]+$')
-        if ids != "":
-            args = ids.split()
-            class_name = self.checkGlobalClass(args[0])
-            if (args and len(args) == 1):
-                idMatch = re.match(p, args[0])
-                clMatch = re.match(pattern1, args[0])
-                if idMatch:
-                    print("** class name is missing **")
-                elif (clMatch and args[0] == "BaseModel"):
-                    print("** instance id missing **")
-            elif (args and len(args) >= 2):
-                klas, id, attr_name, attr_value = args
-                if (attr_name or attr_value == ""):
-                    attr_name = ""
-                    attr_value = ""
-                """update method called"""
-                if class_name == args[0]:
-                    self.call_update(id, attr_name, attr_value)
-            elif (args and len(args) > 3):
-                print("Invalid input. Usage: update <attr_name> <attr_value>")
-        else:
-            print("** class name is missing **")
+    def do_update(self, arg):
+        """Update user attributes"""
 
-    def call_update(self, id, attr_name, attr_value):
-        """ method powers the update functionality
-            and is called from do_update method
-        """
-        if os.path.exists("file.json"):
-            with open("file.json", "r") as f:
-                json_str = json.load(f)
-                updId = ""
-                for key, value in json_str.items():
-                    entryId = value.get('id')
-                    entryClass = value.get('__class__')
-                    if entryId == id:
-                        updId = f"{entryClass}.{entryId}"
-                if updId in json_str:
-                    if (attr_name == ""):
-                        print("** attribute name missing **")
-                elif (attr_value == ""):
-                    print("** value missing **")
-                else:
-                    print("** no instance found **")
-        else:
-            pass
+        arg = arg.split()
+
+        if len(arg) < 1:
+            print("** class name missing **")
+            return
+        class_name = arg[0]
+
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+
+        if len(arg) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = arg[1]
+        key = class_name + '.' + instance_id
+        every_instance = storage.all()
+
+        if key not in every_instance:
+            print("** no instance found **")
+            return
+
+        instance = every_instance[key]
+
+        if len(arg) < 3:
+            print("** attribute name missing **")
+            return
+
+        kiy = arg[2]
+
+        if len(arg) < 4:
+            print("** value missing **")
+            return
+
+        attr_val = arg[3]
+
+        if len(arg) > 4:
+            return
+
+        if hasattr(instance, at_name):
+            if kiy == "id" or kiy == "created_at" or kiy == "updated_at":
+                return
+            attr_val = type(getattr(instance, kiy))(attr_val)
+            try:
+                setattr(instance, kiy, attr_val)
+                storage.save()
+            except AttributeError:
+                pass
+            except ValueError:
+                pass
 
     def do_quit(self, line):
         """ Quit AirBnB terminal by typing 'quit' """
@@ -318,35 +291,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
-
-    """def modify_json(self, value):
-        strs = []
-        obj1 = value
-        function call to convert "time" to suit requirement
-        time_c = self.time_convert(obj1)
-        model_name = f"[{obj['__class__']}]"
-        model_id = "(" + value["id"] + ")"
-        model_attr = str(value)
-        model_instance = f"{model_name} {model_id} {model_attr}"
-        strs.append(model_instance)
-        result = "[" + ", ".join(strs) + "]"
-        return result"""
-
-    """def call_do_all(self, file, cmarg):
-        method to execute do_all
-        if cmarg == "":
-            pass
-        if cmarg != "":
-            args = cmarg.split()
-            if (args[0] != "BaseModel"):
-                    print("** class name doesn't exist **")
-        a=""
-        for key, value in file.items():
-            if cmarg != "":
-                id_value = value.get('__class__')
-                if id_value == args[0]:
-                    a = self.modify_json(value)
-            else:
-                a = self.modify_json(value)
-            return a;
-     """

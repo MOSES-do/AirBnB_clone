@@ -6,6 +6,6 @@ from models.base_model import BaseModel
 
 class Amenity(BaseModel):
     """amenity constructor"""
-    def __init__(self):
-        super().__init__()
-        name = ""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = kwargs.get('name', '')

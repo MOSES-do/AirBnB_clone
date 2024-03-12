@@ -8,10 +8,10 @@ import models
 class User(BaseModel):
     """Structure of user class"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """ constructor method """
-        super().__init__()
-        self.email = ""
-        self.password = ""
-        self.first_name = ""
-        self.last_name = ""
+        super().__init__(*args, **kwargs)
+        self.email = kwargs.get('email', '')
+        self.password = kwargs.get('password', '')
+        self.first_name = kwargs.get('first_name', '')
+        self.last_name = kwargs.get('last_name', '')
