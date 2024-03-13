@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 """ Command Interpreter """
 import cmd
@@ -60,6 +60,7 @@ class HBNBCommand(cmd.Cmd):
         """ create instance of a BaseModel """
         if line == "":
             print("** class name missing **")
+            return
 
         try:
             model_cls = globals()[line]
@@ -114,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
             elif (args and len(args) > 2):
                 print("Invalid input. Usage: show  <class> <id>")
         else:
-            print("** class name is missing **")
+            print("** class name missing **")
 
     def do_count(self, line):
         if line != "":
@@ -128,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
                         count += 1
                 print(count)
         else:
-            print("** class name is missing **")
+            print("** class name missing **")
 
     def do_all(self, line):
         """ print all instances of BaseModel """
@@ -200,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
             elif (args and len(args) > 2):
                 print("Invalid input. Usage: show  <class> <id>")
         else:
-            print("** class name is missing **")
+            print("** class name missing **")
 
     def do_update(self, arg):
         """Update user attributes"""
