@@ -245,7 +245,7 @@ class HBNBCommand(cmd.Cmd):
         if len(arg) > 4:
             return
 
-        if hasattr(instance, at_name):
+        if hasattr(instance, kiy):
             if kiy == "id" or kiy == "created_at" or kiy == "updated_at":
                 return
             attr_val = type(getattr(instance, kiy))(attr_val)
