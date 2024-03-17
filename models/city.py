@@ -1,13 +1,19 @@
 #!/usr/bin/python3
 
 """city class"""
-from models.base_model import BaseModel
+from models.state import State
 
 
-class City(BaseModel):
+class City(State):
     """city class"""
+    state_id = ""
+    name = ""
+
     def __init__(self, *args, **kwargs):
         """city constructor"""
         super().__init__(*args, **kwargs)
-        self.state_id = kwargs.get('state_id', '')
-        self.name = kwargs.get('name', '')
+        """
+            Retrieve the value associated with the key 'name'
+            from kwargs, defaulting to '' if not found
+        """
+        self.state_id = kwargs.get('State.id', '')

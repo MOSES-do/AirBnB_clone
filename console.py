@@ -67,6 +67,7 @@ class HBNBCommand(cmd.Cmd):
             cls_model = self.checkGlobalClass(line)
             new_instance_cls = eval(f'{cls_model}()')
             new_instance = new_instance_cls
+            storage.new(new_instance)
             new_instance.save()
             print(new_instance.id)
         except KeyError:
@@ -144,8 +145,8 @@ class HBNBCommand(cmd.Cmd):
                     if id_value == args[0]:
                         cls = globals()[id_value]
                         result = cls(**value)
-                if (class_name == args[0]):
-                    print(result)
+                        if (class_name == args[0]):
+                            print(result)
             elif (line == ""):
                 for key, value in json_str.items():
                     id_value = value.get('__class__')
@@ -241,7 +242,8 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
 
-        attr_val = arg[3]
+        c = arg[3]
+        attr_val = c.replace('"', '')
 
         if len(arg) > 4:
             return
@@ -250,13 +252,18 @@ class HBNBCommand(cmd.Cmd):
             if kiy == "id" or kiy == "created_at" or kiy == "updated_at":
                 return
             attr_val = type(getattr(instance, kiy))(attr_val)
+            instance.save()
             try:
-                setattr(instance, kiy, attr_val)
+                inst = setattr(instance, kiy, attr_val)
                 storage.save()
             except AttributeError:
                 pass
             except ValueError:
                 pass
+        else:
+            inst = setattr(instance, kiy, attr_val)
+            instance.save()
+            storage.save()
 
     def do_quit(self, line):
         """ Quit AirBnB terminal by typing 'quit' """
