@@ -111,6 +111,10 @@ class HBNBCommand(cmd.Cmd):
                     print("** instance id missing **")
             elif (args and len(args) == 2):
                 klas, id = args
+                idMatch = re.match(p, id)
+                if not idMatch:
+                    print("** no instance found **")
+                    return 
                 if class_name == klas:
                     self.call_show(id, klas)
             elif (args and len(args) > 2):
