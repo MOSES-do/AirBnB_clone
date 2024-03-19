@@ -20,6 +20,14 @@ section.filters button {
     cursor: pointer;
 }
 
+@media only screen and (max-width:523px) {
+    section.filters button {
+        margin-left: auto;
+        width: 40%;
+        margin-right: 10px;
+    }
+}
+
 .filters button:hover {
     opacity: 90%;
 }
@@ -29,6 +37,14 @@ section.filters .amenities {
     height: 100%;
     width: 25%;
     cursor: pointer;
+}
+
+@media only screen and (max-width:523px) {
+
+    section.filters .locations,
+    section.filters .amenities {
+        display: none;
+    }
 }
 
 .filters .locations h4,

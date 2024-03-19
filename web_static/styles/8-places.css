@@ -23,6 +23,24 @@
     border-radius: 4px;
 }
 
+@media only screen and (max-width:449px) {
+    .places article {
+        min-width: 320px;
+    }
+}
+
+@media only screen and (max-width:351px) {
+    .places article {
+        min-width: 280px;
+    }
+}
+
+@media only screen and (max-width:315px) {
+    .places article {
+        min-width: 250px;
+    }
+}
+
 .places article h2 {
     font-size: 30px;
     text-align: center;
@@ -74,6 +92,7 @@ article .price_by_night {
 
 article .information {
     height: 80px;
+    width: 100%;
     border-top: 1px#DDDDDD solid;
     border-bottom: 1px#DDDDDD solid;
     padding-bottom: 20px;
@@ -81,7 +100,30 @@ article .information {
     margin-bottom: 20px;
 
     display: flex;
+    justify-content: space-around;
 }
+
+@media only screen and (max-width:449px) {
+    article .information>div:not(:first-child) {
+        margin-left: -30px;
+    }
+}
+
+
+article .information figcaption {
+    display: flex;
+    gap: 1px;
+}
+
+@media only screen and (max-width:315px) {
+    article .information figcaption {
+        width: 10px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 
 article figure {
     display: flex;
