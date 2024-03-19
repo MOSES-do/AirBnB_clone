@@ -1,0 +1,11 @@
+header {
+    background-color: white;
+    height: 70px;
+    width: 100%;
+    border-bottom: 1px #CCCCCC solid;
+    display: flex;
+}
+
+header img {
+    margin-left: 20px;
+}
