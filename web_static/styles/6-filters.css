@@ -39,6 +39,8 @@ section.filters .amenities {
     cursor: pointer;
 }
 
+
+
 @media only screen and (max-width:523px) {
 
     section.filters .locations,
@@ -52,6 +54,18 @@ section.filters .amenities {
     font-weight: 400;
     font-size: 14px;
     margin-top: 0px;
+}
+
+@media only screen and (max-width:784px) {
+    .filters .locations h4 {
+        margin-bottom: 0px;
+    }
+}
+
+@media only screen and (max-width:724px) {
+    .filters .amenities h4 {
+        margin-bottom: 0px;
+    }
 }
 
 section.filters .locations h3,

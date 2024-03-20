@@ -133,7 +133,50 @@ article figure {
 }
 
 
-article .user {}
+article figure .icon_group {
+    background-image: url("../images/icon_group.png");
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+}
+
+article figure .icon_bath {
+    background-image: url("../images/icon_bath.png");
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+}
+
+article figure .icon_bed {
+    background-image: url("../images/icon_bed.png");
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+}
+
+/* .amenities span .icon_tv {
+    background-image: url("../images/icon_tv.png");
+    background-repeat: no-repeat;
+    /* height: 40px;
+    width: 40px; */
+font-size: 20px;
+}
+
+.amenities span .icon_wifi {
+    background-image: url("../images/icon_wifi.png");
+    background-repeat: no-repeat;
+    height: 40%;
+    width: 40%;
+}
+
+.amenities span .icon_pets {
+    background-image: url("../images/icon_pets.png");
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+}
+
+*/ article .user {}
 
 article .amenities {
     width: 100%;
