@@ -4,8 +4,16 @@ header {
     width: 100%;
     border-bottom: 1px #CCCCCC solid;
     display: flex;
+    align-items: center;
 }
 
 header img {
     margin-left: 20px;
+}
+
+header .icon {
+    background-image: url("../images/logo.png");
+    background-repeat: no-repeat;
+    height: 80%;
+    width: 80%;
 }

@@ -29,7 +29,7 @@
     }
 }
 
-@media only screen and (max-width:351px) {
+@media only screen and (max-width:359px) {
     .places article {
         min-width: 280px;
     }
@@ -159,7 +159,7 @@ article figure .icon_bed {
     background-repeat: no-repeat;
     /* height: 40px;
     width: 40px; */
-font-size: 20px;
+/* font-size: 20px; */
 }
 
 .amenities span .icon_wifi {
@@ -175,8 +175,6 @@ font-size: 20px;
     height: 40px;
     width: 40px;
 }
-
-*/ article .user {}
 
 article .amenities {
     width: 100%;

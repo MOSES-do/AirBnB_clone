@@ -9,9 +9,16 @@
     align-items: center;
 }
 
+@media only screen and (max-width: 369px) {
+    .filters {
+        width: 98%;
+    }
+}
+
 section.filters button {
     font-size: 18px;
     background-color: #FF5A5F;
+    border: none;
     color: #FFFFFF;
     height: 48px;
     width: 20%;
@@ -84,11 +91,14 @@ section.filters .amenities>* {
 
 section.filters .amenities {
     margin-right: auto;
+    position: relative;
 }
 
 section.filters .locations {
     border-right: 1px #DDDDDD solid;
+    position: relative;
 }
+
 
 
 
@@ -104,12 +114,17 @@ section.filters .locations {
     border: 1px #DDDDDD solid;
     border-radius: 0px 0px 4px 4px;
     padding: 10px 0px 10px 0px;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all;
+    position: absolute;
 }
 
-.locations:hover ul,
-.amenities:hover ul {
-    display: block;
+.filters .locations:hover ul,
+.filters .amenities:hover ul {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s ease-in 0s, opacity 600ms;
 }
 
 ul.popover li {
